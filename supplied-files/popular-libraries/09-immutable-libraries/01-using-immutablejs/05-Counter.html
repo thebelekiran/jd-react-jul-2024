@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.8.2/immutable.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.4/redux.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.10.2/umd/react.development.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.10.2/umd/react-dom.development.js"></script>
+
+
+        <script type="text/babel">
+            // action types
+            const INCREMENT = 'INCREMENT';
+            const DECREMENT = 'DECREMENT';
+
+            // "action creators" - functions that return "actions" (i.e. objects representing actions in the app)
+            function incrementAC() {
+                return {
+                    type: INCREMENT
+                };
+            } 
+            
+            function decrementAC() {
+                return {
+                    type: DECREMENT
+                };
+            }
+
+            function counterReducer( curState =  Immutable.Map({ value: 0 }), action ) {
+                let newState;
+
+                switch( action.type ) {
+                    case INCREMENT:
+                        newState = curState.update( 'value', v => v + 1 );
+                        break;
+                    case DECREMENT:
+                        newState = curState.update( 'value', v => v - 1 );
+                        break;
+                    default:
+                        newState = curState;
+                }
+
+                return newState;
+            }
+
+            const store = Redux.createStore( counterReducer );
+
+            class Counter extends React.Component {
+                increment = () => {
+                    store.dispatch( incrementAC() );
+                }
+
+                decrement = () => {
+                    // dispatch appropriate action
+                    store.dispatch( decrementAC() );
+                }
+
+                render = () => {
+                    return (
+                        <div>
+                            <button onClick={this.decrement}>-</button>
+                            <span>{store.getState().get( 'value' )}</span>
+                            <button onClick={this.increment}>+</button>
+                        </div>
+                    );
+                }
+
+                componentDidMount() {
+                    // subscribe and forceUpdate on state change
+                    store.subscribe( () => this.forceUpdate() );
+                }
+            }
+
+            ReactDOM.render( <Counter />, document.getElementById( 'root' ) );
+        </script>
+    </body>
+</html>

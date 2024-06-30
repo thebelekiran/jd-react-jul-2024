@@ -1,0 +1,75 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script type="text/babel">
+            const BadComponent = () => {
+                throw new Error("Something went wrong!");
+
+                return <div>Bad component</div>;
+            };
+
+            const GoodComponent = () => {
+                return <div>Good component</div>;
+            };
+
+            class ErrorBoundary extends React.Component {
+                state = {
+                    error: null,
+                    info: null,
+                };
+
+                componentDidCatch(error, info) {
+                    this.setState({
+                        // error: error
+                        error,
+                        info,
+                    });
+
+                    console.log("error = ", error);
+                    console.log("info = ", info);
+                    console.log("info.componentStack = ", info.componentStack);
+                }
+
+                render() {
+                    const children = this.props.children;
+                    const { error, info } = this.state;
+
+                    return !error ? children : <pre>{info.componentStack}</pre>;
+                }
+            }
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(
+                <>
+                    <ErrorBoundary>
+                        <BadComponent />
+                    </ErrorBoundary>
+                    <ErrorBoundary>
+                        <GoodComponent />
+                    </ErrorBoundary>
+                </>
+            );
+        </script>
+    </body>
+</html>

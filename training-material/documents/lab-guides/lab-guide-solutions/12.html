@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Function component and state, useState(), useEffect(), useRef()</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+        
+        <script type="text/babel">
+            const Counter = () => {
+                const changeByRef = React.useRef();
+                const [ count, setCount ] = React.useState( parseInt( localStorage.getItem( 'count' ) ) || 0 );
+
+                const change = action => {
+                    let changeBy = parseInt( changeByRef.current.value ) || 0;
+                    if( action === '-' ) {
+                        changeBy = -changeBy;
+                    }
+
+                    setCount( c => c + changeBy );
+                };
+
+                React.useEffect(
+                    () => {
+                        localStorage.setItem( 'count', count );
+                    },
+                    [ count ]
+                )
+
+                return (
+                    <div>
+                        <button onClick={() => change( '-' )}>-</button>
+                        <span id="counter">{count}</span>
+                        <button onClick={() => change( '+' )}>+</button>
+                        <input type="number" ref={changeByRef} />
+                    </div>
+                );
+            };
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            
+            root.render( <Counter /> );
+        </script>
+    </body>
+</html>

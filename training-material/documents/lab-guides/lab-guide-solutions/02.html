@@ -1,0 +1,37 @@
+<!--
+    2. Create a div React element. It should have as children the following 3 elements
+        a. A span with id 'counter' and the text '0' as child
+        b. A button with text '+'
+        c. A button with text '-'
+    Also, render the React element inside the root div.
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Creating and Rendering an Element - JSX</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+
+        <script type="text/babel">
+            const element = (
+                <div>
+                    <button>-</button>
+                    <span id="counter">0</span>
+                    <button>+</button>
+                </div>
+            );
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            root.render( element );
+        </script>
+    </body>
+</html>

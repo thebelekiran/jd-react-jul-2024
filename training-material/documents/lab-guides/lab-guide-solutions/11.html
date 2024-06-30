@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Class component and state, setState(), componentDidMount(), componentDidUpdate(), componentWillUnmount()</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+
+        <script type="text/babel">
+            class FluCounter extends React.Component {
+                state = {
+                    numberOfCases: 1,
+                    multiplicationFactor: 2,
+                    count: 0,
+                };
+
+                render() {
+                    const { numberOfCases } = this.state;
+                    return <div>{numberOfCases}</div>;
+                }
+
+                componentDidMount() {
+                    this.updateNumberofCases();
+                }
+
+                updateNumberofCases() {
+                    // we store the interval id so that we can stop the function from being scheduled for execution later on (in componentWillUnmount)
+                    this.id = setInterval(() => {
+                        this.setState((state) => {
+                            return {
+                                numberOfCases:
+                                    state.numberOfCases *
+                                    state.multiplicationFactor,
+                                count: state.count + 1,
+                            };
+                        });
+                    }, 3000);
+                }
+
+                componentDidUpdate(oldProps, oldState) {
+                    const { count, numberOfCases, multiplicationFactor } =
+                        this.state;
+
+                    // avoid infinite loop due to multiplicationFactor state change that happens within this conditional
+                    if (oldState.count !== count) {
+                        if (count % 20 === 0) {
+                            // one cycle completed
+                            this.setState((s) => {
+                                return {
+                                    multiplicationFactor: 2,
+                                };
+                            });
+                        } else if (count % 10 === 0) {
+                            // half cycle completed
+                            this.setState((s) => {
+                                return {
+                                    multiplicationFactor: 0.5,
+                                };
+                            });
+                        }
+                    }
+                }
+
+                componentWillUnmount() {
+                    console.log("My time is up");
+
+                    // if we do not do this, the function set up to run periodically in updateNumberofCases() will continue executing. This would not be right, as the component has gone off the screen
+                    clearInterval( this.id );
+                }
+            }
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            
+            root.render( <FluCounter /> );
+
+            setTimeout(() => {
+                root.render( <div>My time is up</div> );
+            }, 60000);
+        </script>
+    </body>
+</html>

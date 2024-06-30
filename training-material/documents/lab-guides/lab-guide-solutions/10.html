@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Class component and state, setState(), componentDidMount()</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+        
+        <script type="text/babel">
+            /**
+             * We ignore the fact that there will be errors due to limits on precision of integers for large numbers 
+             */
+            class FibonacciSequence extends React.Component {
+                state = {
+                    number1: 0,
+                    number2: 1,
+                    displayString: '0, 1'
+                };
+
+                render() {
+                    const { displayString } = this.state;
+
+                    return (
+                        <div>{displayString}</div>
+                    );
+                }
+
+                componentDidMount() {
+                    setInterval(
+                        () => {
+                            const newNumber = this.state.number1 + this.state.number2;
+
+                            this.setState({
+                                number1: this.state.number2,
+                                number2: newNumber,
+                                displayString: this.state.displayString + ', ' + newNumber
+                            });
+                        },
+                        1000
+                    );
+                }
+            }
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            root.render(
+                <FibonacciSequence />
+            );
+        </script>
+    </body>
+</html>

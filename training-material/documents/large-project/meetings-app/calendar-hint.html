@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            .calendar {
+                position: relative;
+            }
+
+            .calendar-hours {
+                display: flex;
+                height: 50px;
+                margin-bottom: 10px;
+            }
+
+            .calendar-hour-value {
+                width: 50px;
+            }
+
+            .calendar-hour-box {
+                flex-basis: auto;
+                flex-grow: 1;
+                background-color: navy;
+            }
+
+            .meeting {
+                position: absolute;
+                background-color: lightgray;
+                left: 60px;
+                right: 10px;
+            }
+            
+            .meeting-1 {
+                top: 240px;
+                height: 110px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="calendar"> <!-- position: relative-->
+            <div class="calendar-hours">
+                <span class="calendar-hour-value">0</span>
+                <div class="calendar-hour-box"></div>
+            </div>
+            <div class="calendar-hours">
+                <span class="calendar-hour-value">1</span>
+                <div class="calendar-hour-box"></div>
+            </div>
+            <div class="calendar-hours">
+                <span class="calendar-hour-value">2</span>
+                <div class="calendar-hour-box"></div>
+            </div>
+            <div class="calendar-hours">
+                <span class="calendar-hour-value">3</span>
+                <div class="calendar-hour-box"></div>
+            </div>
+            <div class="calendar-hours">
+                <span class="calendar-hour-value">4</span>
+                <div class="calendar-hour-box"></div>
+            </div>
+            <div class="calendar-hours">
+                <span class="calendar-hour-value">5</span>
+                <div class="calendar-hour-box"></div>
+            </div>
+
+            <div class="meeting meeting-1"></div> <!-- position: absolute -->
+            <div class="meeting meeting-2"></div>
+        </div>
+    </body>
+</html>

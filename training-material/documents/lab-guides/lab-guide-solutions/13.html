@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Function component and state, useState(), useRef()</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+        
+        <script type="text/babel">
+            const Calculator = () => {
+                const operatorRef = React.useRef();
+                const operand1Ref = React.useRef();
+                const operand2Ref = React.useRef();
+                
+                const [ result, setResult ] = React.useState( '' );
+                const [ lastCalculation, setLastCalculation ] = React.useState( '' );
+
+                const calculate = () => {
+                    const operator = operatorRef.current.value;
+                    const operand1 = parseFloat( operand1Ref.current.value );
+                    const operand2 = parseFloat( operand2Ref.current.value );
+
+                    if( isNaN( operand1 ) || isNaN( operand2 ) ) {
+                        alert( 'Please enter both operands (numbers)' );
+                        return;
+                    }
+
+                    if( operator === '' ) {
+                        alert( 'Please select an operator from the dropdown' );
+                        return;
+                    }
+
+                    switch( operator ) {
+                        case '+':
+                            setResult( operand1 + operand2 );
+                            break;
+                        case '-':
+                            setResult( operand1 + operand2 );
+                            break;
+                        case 'x':
+                            setResult( operand1 * operand2 );
+                            break;
+                        case '÷':
+                            setResult( operand1 / operand2 );
+                            break;
+                    }
+
+                    setLastCalculation( `${operand1} ${operator} ${operand2}` )
+                };
+
+                return (
+                    <div>
+                        <input type="number" ref={operand1Ref} placeholder="operand 1" />
+                        <select ref={operatorRef}>
+                            <option value="">operator</option>
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                            <option value="x">x</option>
+                            <option value="÷">÷</option>
+                        </select>
+                        <input type="number" ref={operand2Ref} placeholder="operand 2" />
+                        <button onClick={calculate}>Calculate</button>
+                        {
+                            lastCalculation && (
+                                <div>
+                                    {lastCalculation} = {result}
+                                </div>
+                            )
+                        }
+                    </div>
+                );
+            };
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            
+            root.render( <Calculator /> );
+        </script>
+    </body>
+</html>

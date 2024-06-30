@@ -1,0 +1,58 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:906623150603:task-definition/workshops-app:9",
+    "containerDefinitions": [
+        {
+            "name": "workshops-app-client",
+            "image": "public.ecr.aws/z4j6w8y4/digdeeper/workshops-app:latest",
+            "cpu": 1024,
+            "memory": 2048,
+            "memoryReservation": 1024,
+            "portMappings": [
+                {
+                    "name": "container-3000-tcp",
+                    "containerPort": 3000,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "systemControls": []
+        }
+    ],
+    "family": "workshops-app",
+    "executionRoleArn": "arn:aws:iam::906623150603:role/ecsTaskExecutionRole",
+    "networkMode": "bridge",
+    "revision": 9,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2"
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-06-19T17:48:27.364Z",
+    "registeredBy": "arn:aws:iam::906623150603:root",
+    "tags": []
+}

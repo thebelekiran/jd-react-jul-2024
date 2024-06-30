@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Virtual DOM</title>
+        <style>
+            body {
+                width: 50%;
+                max-width: 540px;
+                margin: 2em auto;
+            }
+
+            form {
+                padding: 1em;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .form-group {
+                display: flex;
+                margin: 1.5em 0;
+            }
+
+            .form-group label {
+                flex-basis: 25%;
+            }
+            
+            .form-group input {
+                flex-basis: 75%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+
+        <script type="text/babel">
+            const registerEl = (
+                <form action="/register">
+                    <h1>Register</h1>
+                    <div className="form-group">
+                        <label htmlFor="emailid">Email</label>
+                        <input type="email" id="emailid" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="confirm-password">Confirm your password</label>
+                        <input type="password" id="confirm-password" />
+                    </div>
+                    <button key="action-button">Register</button>
+                </form>
+            );
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            root.render( registerEl );
+
+            setTimeout(() => {
+                const loginEl = (
+                    <form action="/login">
+                        <h1>Login</h1>
+                        <div className="form-group">
+                            <label htmlFor="emailid">Email</label>
+                            <input type="email" id="emailid" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input type="password" id="password" />
+                        </div>
+                        <button key="action-button">Login</button>
+                    </form>
+                );
+
+                root.render( loginEl );
+            }, 20000);
+        </script>
+    </body>
+</html>

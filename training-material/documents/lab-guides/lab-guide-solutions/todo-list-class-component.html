@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+        <style>
+            body {
+                max-width: 600px;
+                margin: 2em auto;
+            }
+
+            .btn {
+                border: 0;
+            }
+
+            .btn-primary {
+                background-color: gold;
+                color: black;
+            }
+            
+            .btn-danger {
+                border: 0;
+                background-color: crimson;
+                color: white;
+            }
+
+            .app {
+                padding: 2em;
+                box-shadow: 0 0 3px 4px gold;
+                border-radius: 10px;
+                margin: 0 1em;
+                background-color: #444;
+                color: gold;
+            }
+
+            .task-input {
+                display: flex;
+            }
+
+            .task-input > * {
+                flex: 1 1 0;
+            }
+
+            .task-input > input {
+                padding: 0.5em;
+                border: 0;
+            }
+            
+            .task-input > button {
+                max-width: 120px;
+                border-radius: 0;
+            }
+
+            .task-list {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                font-size: 1.5em;
+            }
+
+            .task-list li {
+                display: flex;
+                margin: 1em 0;
+            }
+
+            .task-list li > .task-toggle-completed {
+                width: 1.5em;
+                height: 1.5em;
+                margin-right: 0.25em;
+            }
+
+            .task-list li > .task-name,
+            .task-list li > .btn-delete-task {
+                flex: 1 1 0;
+            }
+
+            .task-not-completed {
+                text-decoration: line-through;   
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.1/umd/react.development.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.1/umd/react-dom.development.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js"></script>
+
+        <script type="text/babel">
+            // 12. Add state to the App component and store tasks array in it. Implement add task, delete task, and marking task as complete/not complete functionality in the todo list app.
+
+            // Let's work on add task functionality first - if you complete it you can try the delete functionality
+
+            class App extends React.Component {
+                state = {
+                    tasks: [ ...this.props.tasks ]
+                };
+
+                addTask = ( task ) => {
+                    this.setState(curState => {
+                        return {
+                            tasks: [
+                                ...curState.tasks,
+                                {
+                                    id: uuidv4(),
+                                    name: task,
+                                    completed: false
+                                }
+                            ]
+                        };
+                    });
+                }
+                
+                deleteTask = ( task ) => {
+                    this.setState(curState => {
+                        return {
+                            tasks: curState.tasks.filter( t => t.id !== task.id )
+                        };
+                    });
+                }
+                
+                toggleCompleted = ( task ) => {
+                    this.setState(curState => {
+                        return {
+                            tasks: curState.tasks.map( t => {
+                                if( t.id === task.id ) {
+                                    return {
+                                        ...t,
+                                        completed: !t.completed
+                                    };
+                                }
+
+                                return t;
+                            })
+                        };
+                    });
+                }
+
+                render() {
+                    return (
+                        <div className="app">
+                            <h1>Todo List</h1><hr />
+                            <TaskInput 
+                                buttonText="Add Task"
+                                hintText="What do you want to do?"
+                                addTask={this.addTask}
+                            />
+                            <TaskList
+                                {...this.state}
+                                deleteTask={this.deleteTask}
+                                toggleCompleted={this.toggleCompleted} />
+                        </div>
+                    );
+                }
+            }
+
+            const TaskInput = ( { buttonText, hintText, addTask } ) => {
+                const inputRef = React.useRef();
+
+                return (
+                    <form className="task-input">
+                        <input
+                            type="text"
+                            placeholder={hintText}
+                            ref={inputRef}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => addTask( inputRef.current.value )}
+                            className="btn btn-primary"
+                        >
+                                {buttonText}
+                        </button>
+                    </form>
+                );
+            };
+
+            // render list of tasks
+            const TaskList = ( { tasks, deleteTask, toggleCompleted } ) => {
+                return (
+                    <ol className="task-list">
+                        {
+                            tasks.map( task => (
+                                <li key={task.id}>
+                                    <input
+                                        type="checkbox"
+                                        checked={task.completed}
+                                        onChange={() => toggleCompleted( task )}
+                                        className="task-toggle-completed"
+                                    />
+                                    <span className={`task-name ${task.completed && `task-not-completed`}`}>{task.name}</span>
+                                    <button
+                                        onClick={() => deleteTask( task )}
+                                        className="btn-delete-task btn btn-danger"
+                                    >
+                                        Delete
+                                    </button>
+                                </li>
+                            ))
+                        }
+                    </ol>
+                );
+            };
+
+            const tasks = [
+                { id: uuidv4(), name: 'Buy milk', completed: true },
+                { id: uuidv4(), name: 'Learn React', completed: false },
+            ]
+
+            ReactDOM.render( <App tasks={tasks} />, document.getElementById( 'root' ) );
+        </script>
+    </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>API Access, Ajax, State, Side-effects (Class component)</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!--
+            Including Axios for Ajax calls. Alternatively, the browser-native fetch() API may be used.
+        -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.2/axios.min.js"></script>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+        
+        <script type="text/babel">
+            const API_KEY = '34ab59f78b3f662a1eec0a1965f60c71';
+
+            const fetchCurrentWeatherDataForCity = async city => {
+                const response = await axios.get( `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric` );
+                return response.data;
+            };
+
+            const pad = val => ( '' + val ).padStart( 2, '0' );
+
+            const SunriseSunset = (
+                {
+                    sunrise,
+                    sunset
+                }
+            ) => {
+                // convert timestamp from seconds to millisecond since Epoch (Jan 1 1970 00:00:00:000)
+                const sunriseDate = new Date( sunrise * 1000 );
+                const sunsetDate = new Date( sunset * 1000 );
+
+                const sunriseTime = `${pad( sunriseDate.getHours() )}:${pad(sunriseDate.getMinutes())}`;
+                const sunsetTime = `${pad(sunsetDate.getHours())}:${pad(sunsetDate.getMinutes())}`;
+
+                return (
+                    <>
+                        <h3 className="h4">Sunrise / Sunset</h3>
+                        <div>Sunrise: {sunriseTime}</div>
+                        <div>Sunset: {sunsetTime}</div>
+                    </>
+                );
+            };
+
+            class WeatherReport extends React.Component {
+                static colors = {
+                    "200": [ "#444", "#ddd" ],
+                    "300": [ "#ddd", "#444" ],
+                    "500": [ "#888", "#fff" ],
+                    "600": [ "#fff", "#222" ],
+                    "700": [ "#ccc", "#444" ],
+                    "800": [ "skyblue", "#444" ]
+                };
+
+                render() {
+                    const {
+                        name,
+                        weather: [
+                            {
+                                id,
+                                main,
+                                description,
+                                icon
+                            }
+                        ],
+                        wind,
+                        clouds,
+                        main: {
+                            temp,
+                            pressure,
+                            humidity
+                        },
+                        sys: sunriseSunset,
+                        coord: {
+                            lat,
+                            lon
+                        }
+                    } = this.props;
+
+                    // logic to get background color to be applied based on id value (weather condition)
+                    let idInt = parseInt( id );
+                    idInt = idInt - idInt % 100;
+
+                    const style = {
+                        backgroundColor: WeatherReport.colors[idInt][0],
+                        color: WeatherReport.colors[idInt][1]
+                    };
+
+                    return (
+                        <div className="container p-3 border my-5 text-center" style={style}>
+                            <div>
+                                <h2 className="h3 font-weight-light">
+                                    Today's weather report for <span className="font-weight-bold">{name}</span>
+                                </h2>
+                                <small className="text-muted">
+                                    Coordinates: ({lat}, {lon})
+                                </small>
+                            </div>
+                            <img src={`http://openweathermap.org/img/wn/${icon}@2x.png`} alt={description} title={description} />
+                            <div className="row">
+                                <div className="col-6 col-lg-3 my-2">
+                                    <h3 className="h4">Weather condition</h3>
+                                    <div>
+                                        Temperature: {temp} °C
+                                    </div>
+                                    <div>
+                                        {main} - {description}
+                                    </div>
+                                </div>
+                                <div className="col-6 col-lg-3 my-2">
+                                    <h3 className="h4">Wind</h3>
+                                    <div>Speed: {wind.speed} m/s</div>
+                                    <div>Degree: {wind.deg}</div>
+                                </div>
+                                <div className="col-6 col-lg-3 my-2">
+                                    <h3 className="h4">Miscellaneous</h3>
+                                    <div>Clouds: {clouds.all}%</div>
+                                    <div>Pressure: {JSON.stringify(pressure)} millibars</div>
+                                    <div>Humidity: {JSON.stringify(humidity)}%</div>
+                                </div>
+                                <div className="col-6 col-lg-3 my-2">
+                                    <SunriseSunset {...sunriseSunset} />
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            
+            // Using an IIFE to execute the async function immediately
+            (async () => {
+                const data = await fetchCurrentWeatherDataForCity( 'Mysore' );
+                root.render(
+                    <WeatherReport
+                        {...data}
+                    />
+                );
+            })();
+        </script>
+    </body>
+</html>

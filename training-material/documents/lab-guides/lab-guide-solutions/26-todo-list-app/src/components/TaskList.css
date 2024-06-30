@@ -1,0 +1,26 @@
+.task-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.task-list li {
+    display: flex;
+    align-items: flex-start;
+    margin: 1em 0;
+}
+
+.task-list li > .task-toggle-completed {
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 0.25em;
+}
+
+.task-list li > .task-name {
+    flex: 1 1 0;
+}
+
+.task-not-completed {
+    text-decoration: line-through;   
+}

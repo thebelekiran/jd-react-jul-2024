@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/immer/7.0.9/immer.umd.development.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.4/redux.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.10.2/umd/react.development.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.10.2/umd/react-dom.development.js"></script>
+
+
+        <script type="text/babel">
+            // action types
+            const INCREMENT = 'INCREMENT';
+            const DECREMENT = 'DECREMENT';
+
+            // "action creators" - functions that return "actions" (i.e. objects representing actions in the app)
+            function incrementAC() {
+                return {
+                    type: INCREMENT
+                };
+            } 
+            
+            function decrementAC() {
+                return {
+                    type: DECREMENT
+                };
+            }
+
+            function counterReducer( curState =  { value: 0 }, action ) {
+                // immer.produce gives us the new state with required changes applied
+                return immer.produce( curState, draft => {
+                    switch( action.type ) {
+                        case INCREMENT:
+                            draft.value++;
+                            return;
+                        case DECREMENT:
+                            draft.value--;
+                            return;
+                    }
+                });
+            }
+
+            const store = Redux.createStore( counterReducer );
+
+            class Counter extends React.Component {
+                increment = () => {
+                    store.dispatch( incrementAC() );
+                }
+
+                decrement = () => {
+                    // dispatch appropriate action
+                    store.dispatch( decrementAC() );
+                }
+
+                render = () => {
+                    return (
+                        <div>
+                            <button onClick={this.decrement}>-</button>
+                            <span>{store.getState().value}</span>
+                            <button onClick={this.increment}>+</button>
+                        </div>
+                    );
+                }
+
+                componentDidMount() {
+                    // subscribe and forceUpdate on state change
+                    store.subscribe( () => this.forceUpdate() );
+                }
+            }
+
+            ReactDOM.render( <Counter />, document.getElementById( 'root' ) );
+        </script>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script type="text/babel">
+            const Counter = () => {
+                const [value, setValue] = React.useState(0);
+
+                const decrement = () => setValue((v) => v - 1);
+                const increment = () => setValue((v) => v + 1);
+
+                return (
+                    <span className="container border border-dark p-4 d-inline-block">
+                        <button onClick={decrement}>-</button>
+                        <span className="mx-3">{value}</span>
+                        <button onClick={increment}>+</button>
+                    </span>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<Counter />);
+        </script>
+    </body>
+</html>

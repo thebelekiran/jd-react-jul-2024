@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.4.2/umd/react.development.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.4.2/umd/react-dom.development.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+        <script type="text/babel">
+            // 9. Define a TaskList component (class component) that takes an array of tasks like below.
+            // The TaskList renders the tasks within an ordered list (ol, li). Each li should have a checkbox, name of the task and a delete button.
+            // Define a App component that has a TaskInput element and TaskList element as children. The app takes the tasks array as prop and passes it down to TaskList component. Render the App component element.
+            // You can also define a TaskListItem component if you like. It renders a single task (checkbox, name of the task and a delete button).
+
+            function App( props ) {
+                return (
+                    <div>
+                        <TaskInput buttonText="Add Task" hintText="What do you want to do?" />
+                        <TaskList {...props} /> {/* pass required props */}
+                    </div>
+                );
+            }
+
+            function TaskInput( props ) {
+                return (
+                    <form>
+                        <input type="text" placeholder={props.hintText} />
+                        <button>{props.buttonText}</button>
+                    </form>
+                );
+            }
+
+            // render list of tasks
+            function TaskList( props ) {
+                return (
+                    <ol>
+                        {
+                            props.tasks.map( task => (
+                                <li>
+                                    <input type="checkbox" checked={task.completed} />
+                                    {task.name}
+                                    <button>Delete</button>
+                                </li>
+                            ))
+                        }
+                    </ol>
+                );
+            }
+
+            const tasks = [
+                { name: 'Buy milk', completed: true },
+                { name: 'Learn React', completed: false },
+            ]
+
+            ReactDOM.render( <App tasks={tasks} />, document.getElementById( 'root' ) );
+        </script>
+    </body>
+</html>

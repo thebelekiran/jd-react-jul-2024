@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Default props, Prop types</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+        <style>
+            .business-card-container {
+                width: 100%;
+                max-width: 640px;
+            }
+
+            .business-card img {
+                max-height: 200px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+
+        <script type="text/babel">
+            const Contact = ( { contact : { tel, emailid } } ) => {
+                return (
+                    <p className="my-3">
+                        Tel: {tel}
+                        <br />
+                        Emailid: {emailid}
+                    </p>
+                );
+            };
+
+            Contact.propTypes = {
+                contact: PropTypes.shape({
+                    tel: PropTypes.string.isRequired,
+                    emailid: PropTypes.string
+                }).isRequired
+            };
+
+            const BusinessCard = ({
+                firstName,
+                lastName,
+                lastNameFirst,
+                designation,
+                company,
+                imageSrc,
+                ...contactDetails
+            }) => {
+                return (
+                    <div className="business-card alert alert-primary clearfix">
+                        <img className="float-right" src={imageSrc} />
+                        <h1 className="h5">
+                        {
+                            lastNameFirst ? `${lastName}, ${firstName}` : `${firstName} ${lastName}`
+                        }
+                        </h1>
+                        <small>{designation}</small> @ <small>{company}</small>
+                        <Contact {...contactDetails} />
+                    </div>
+                );
+            };
+            
+            BusinessCard.defaultProps = {
+                lastNameFirst: false,
+                imageSrc: 'images/profile.png'
+            };
+
+            BusinessCard.propTypes = {
+                firstName: PropTypes.string.isRequired,
+                lastName: PropTypes.string,
+                lastNameFirst: PropTypes.bool,
+                designation: PropTypes.string,
+                company: PropTypes.string,
+                contact: PropTypes.shape({
+                    tel: PropTypes.string.isRequired,
+                    emailid: PropTypes.string
+                }).isRequired,
+                imageSrc: PropTypes.string
+            };
+
+            const props = {
+                firstName: 'John',
+                lastName: 'Doe',
+                designation: 'CEO',
+                company: 'Example Consulting',
+                contact: {
+                    tel: '+001-123-456-7890',
+                    emailid: 'john.doe@example.com'
+                }
+            };
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            root.render( 
+                <div className="business-card-container">
+                    <BusinessCard {...props} />
+                </div>
+            );
+        </script>
+    </body>
+</html>

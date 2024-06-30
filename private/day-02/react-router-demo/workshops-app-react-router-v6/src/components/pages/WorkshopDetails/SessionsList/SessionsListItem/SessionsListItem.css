@@ -1,0 +1,9 @@
+.remove-user-agent-button-styles {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+.remove-user-agent-button-styles > path {
+    fill: none !important;
+}

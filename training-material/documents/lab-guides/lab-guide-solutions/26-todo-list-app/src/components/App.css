@@ -1,0 +1,28 @@
+body {
+    max-width: 600px;
+    margin: 2em auto;
+}
+
+.btn {
+    border: 0;
+}
+
+.btn-primary {
+    background-color: gold;
+    color: black;
+}
+
+.btn-danger {
+    border: 0;
+    background-color: crimson;
+    color: white;
+}
+
+.app {
+    padding: 2em;
+    box-shadow: 0 0 3px 4px gold;
+    border-radius: 10px;
+    margin: 0 1em;
+    background-color: #444;
+    color: gold;
+}

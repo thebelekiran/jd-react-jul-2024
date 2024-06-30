@@ -1,0 +1,154 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Handling Forms</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+        <style>
+            .text-sm {
+                font-size: 0.8em;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script type="text/babel">
+            // Controlled component - use state to get user input values
+
+            const LoginForm = () => {
+                const [email, setEmail] = React.useState("john@dll.com");
+                const [password, setPassword] = React.useState("");
+
+                const [emailError, setEmailError] = React.useState("");
+                const [passwordError, setPasswordError] = React.useState("");
+
+                const validateEmail = (email) => {
+                    const emailPat = /^[A-Za-z][A-Za-z0-9_\-\.]+@dll\.com$/i;
+
+                    if (email.trim() === "") {
+                        return "Email is required";
+                    }
+
+                    if (!emailPat.test(email)) {
+                        return "Email does not look like a valid DLL email id";
+                    }
+
+                    return "";
+                };
+
+                const validatePassword = (password) => {
+                    // https://stackoverflow.com/questions/12090077/javascript-regular-expression-password-validation-having-special-characters
+                    const passwordPat =
+                        /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{8,20}$/;
+
+                    if (password.trim() === "") {
+                        return "Password is required";
+                    }
+
+                    if (!passwordPat.test(password)) {
+                        return "Minimum 8 characters. Maximum 20 characters . At least one uppercase character. At least one lowercase character . At least one digit.";
+                    }
+
+                    return "";
+                };
+
+                const reset = () => {
+                    setEmail("");
+                    setPassword("");
+                };
+
+                const login = (event) => {
+                    event.preventDefault(); // Hey browser! Don't do whatever you do by default (i.e. submit the form info)
+
+                    const credentials = {
+                        // email: email,
+                        email,
+                        password,
+                    };
+
+                    const emailError = validateEmail(credentials.email);
+                    const passwordError = validatePassword(
+                        credentials.password
+                    );
+
+                    if (emailError === "" && passwordError === "") {
+                        // all good! send credentials to the backend
+                        console.log(credentials);
+                        reset();
+                    }
+
+                    setEmailError(emailError);
+                    setPasswordError(passwordError);
+                };
+
+                return (
+                    <form className="container my-4" onSubmit={login}>
+                        <h1 className="h2">Login</h1>
+                        <hr />
+
+                        <div className="mb-3">
+                            <label htmlFor="email" className="form-label">
+                                Email address
+                            </label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="email"
+                                placeholder="name@example.com"
+                                value={email}
+                                onChange={(event) =>
+                                    setEmail(event.target.value)
+                                }
+                            />
+                            <div className="text-danger text-sm">
+                                {emailError}
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="password" className="form-label">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="password"
+                                value={password}
+                                onChange={(event) =>
+                                    setPassword(event.target.value)
+                                }
+                            />
+                            <div className="text-danger text-sm">
+                                {passwordError}
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <button type="submit" className="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<LoginForm />);
+        </script>
+    </body>
+</html>

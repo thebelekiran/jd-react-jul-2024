@@ -1,0 +1,17 @@
+.task-input {
+    display: flex;
+}
+
+.task-input > * {
+    flex: 1 1 0;
+}
+
+.task-input > input {
+    padding: 0.5em;
+    border: 0;
+}
+
+.task-input > button {
+    max-width: 120px;
+    border-radius: 0;
+}

@@ -1,0 +1,11 @@
+.fa-caret-up,
+.fa-caret-down {
+    font-size: 2em;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.fa-caret-up:hover,
+.fa-caret-down:hover {
+    color: black;
+}

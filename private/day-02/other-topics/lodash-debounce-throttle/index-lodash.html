@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Debounce and Throttle</title>
+    </head>
+    <body>
+        <a href="index.html">Usage of (vanilla JS) debounce and throttle</a>
+        <hr />
+
+        <div>
+            <div>
+                <label for="search">Search</label>
+            </div>
+            <div>
+                <input type="search" id="search" />
+            </div>
+            <div>Searching for <span id="searching-for"></span></div>
+        </div>
+
+        <div style="margin-top: 36px">
+            <button id="update-score">Update score</button>
+            <span id="score"></span>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+        <script>
+            const { debounce, throttle } = _;
+
+            const searchInput = document.getElementById("search");
+            const searchingForEl = document.getElementById("searching-for");
+            const scoreEl = document.getElementById("score");
+            const updateScoreBtn = document.getElementById("update-score");
+
+            function onSearch() {
+                searchingForEl.innerText = searchInput.value;
+            }
+
+            searchInput.addEventListener("input", debounce(onSearch, 500));
+
+            let score = 0;
+
+            function updateScore() {
+                scoreEl.innerText = score;
+                score += 1 + Math.floor(Math.random() * 6); // update score for next call to onResize
+            }
+
+            updateScore();
+            updateScoreBtn.addEventListener(
+                "click",
+                throttle(updateScore, 2000)
+            );
+        </script>
+    </body>
+</html>

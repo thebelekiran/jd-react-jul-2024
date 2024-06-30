@@ -1,0 +1,87 @@
+<!--
+    3. Render 2 div elements with the same structure as in the previous exercise. Try each of the following 3 ways to do it. 
+        a. Render the 2 divs as children of another div 
+        b. Add the 2 divs to an array and render the array of React elements 
+        c. Enclose the 2 divs in a React.Fragment and render
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rendering multiple elements</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.19.2/babel.min.js"></script>
+
+        <script type="text/babel">
+            // a. Render the 2 divs as children of another div 
+            ReactDOM.render(
+                <div>
+                    <div>
+                        <button>-</button>
+                        <span id="counter">0</span>
+                        <button>+</button>
+                    </div>
+                    <div>
+                        <button>-</button>
+                        <span id="counter">0</span>
+                        <button>+</button>
+                    </div>
+                </div>,
+                document.getElementById('root')
+            );
+
+            // b. Add the 2 divs to an array and render the array of React elements (we re-render after 5 seconds)
+            setTimeout(
+                () => {
+                    // Note that we pass an array (there is the comma separating the 2 div elements)
+                    ReactDOM.render(
+                        [
+                            <div key="counter-1">
+                                <button>-</button>
+                                <span id="counter">1</span>
+                                <button>+</button>
+                            </div>,
+                            <div key="counter-2">
+                                <button>-</button>
+                                <span id="counter">1</span>
+                                <button>+</button>
+                            </div>
+                        ],
+                        document.getElementById('root')
+                    );
+                },
+                5000
+            );
+
+            // c. Enclose the 2 divs in a React.Fragment and render  (we re-render after 10 seconds)
+            setTimeout(
+                () => {
+                    ReactDOM.render(
+                        <React.Fragment>
+                            <div>
+                                <button>-</button>
+                                <span id="counter">2</span>
+                                <button>+</button>
+                            </div>
+                            <div>
+                                <button>-</button>
+                                <span id="counter">2</span>
+                                <button>+</button>
+                            </div>
+                        </React.Fragment>,
+                        document.getElementById('root')
+                    );
+                },
+                10000
+            );
+        </script>
+    </body>
+</html>
