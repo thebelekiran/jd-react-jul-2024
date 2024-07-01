@@ -20,17 +20,30 @@
                     'oranges',
                     'bananas'
                 ]);
+                const [filteredFruits, setFilteredFruits] = React.useState(fruits);
 
                 return (
-                    <ul>
-                        {
-                            fruits.map( 
-                                item => <div key={item}>{item}</div>
-                            )
-                        }
-                    </ul>
+                    <>
+                        <input
+                            type="search"
+                            onChange={event => {
+
+                            }}
+                        />
+                        <ul>
+                            {
+                                filteredFruits.map( 
+                                    item => <div key={item}>{item}</div>
+                                )
+                            }
+                        </ul>
+                    </>
                 )
             }
+
+            ReactDOM
+                .createRoot( document.getElementById( 'root' ) )
+                .render(<ProductsList />);
         </script>
     </body>
 </html>
