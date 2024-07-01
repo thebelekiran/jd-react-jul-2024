@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <style>
+            .sidebar a {
+                display: block;
+                text-decoration: none;
+            }
+
+            .sidebar a.selected {
+                border-bottom: 1px solid navy;
+            }
+
+            .app {
+                display: flex;
+            }
+
+            .sidebar, .main {
+                flex-basis: 0;
+            }
+
+            .sidebar {
+                flex-grow: 1;
+            }
+            
+            .main {
+                flex-grow: 3;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.8/babel.js"></script>
+
+        <script type="text/babel">
+            // the context object comes with 2 other component
+            // PageContext.Provider - used by the component that maintains the state - here the "App" component
+            // PageContext.Consumer - this is required by class components that consume the shared context
+                // for function components we use a hook to consume the shared context - useContext()
+            const PageContext = React.createContext();
+
+            const pages = {
+                'Home': 'This is home',
+                'About': 'We are so and so...',
+                'Contact': 'Reach out to us',
+            };
+
+            const App = ( { pages } ) => {
+                const [ selectedPage, setSelectedPage ] = React.useState( 'Home' );
+
+                const value = {
+                    pages, // pages: pages
+                    links: Object.keys( pages ),
+                    selectedPage,
+                    setSelectedPage
+                };
+
+                return (
+                    <PageContext.Provider value={value}>
+                        <div className="app">
+                            <div className="sidebar">
+                                <Sidebar
+                                    links={Object.keys( pages )}
+                                    selectedPage={selectedPage}
+                                    setSelectedPage={setSelectedPage}
+                                />
+                            </div>
+                            <div className="main">
+                                <Main
+                                    pages={pages}
+                                    selectedPage={selectedPage}
+                                />
+                            </div>
+                        </div>
+                    </PageContext.Provider>
+                );
+            };
+
+            const Sidebar = ( props ) => {
+                return (
+                    <>
+                        <div>
+                            <input type="search" />
+                        </div>
+                        <SidebarMenu {...props} />
+                    </>
+                )
+            };
+
+            const SidebarMenu = ( { links, selectedPage, setSelectedPage } ) => {
+                return (
+                    <>
+                        {
+                            links.map(
+                                link => (
+                                    <a
+                                        href="#"
+                                        key={link}
+                                        className={selectedPage === link ? 'selected' : ''}
+                                        onClick={() => setSelectedPage( link )}
+                                    >
+                                        {link}
+                                    </a>
+                                )
+                            )
+                        }
+                    </>
+                );
+            };
+
+            const Main = ( props ) => {
+                return (
+                    <>
+                        <div className="advertisement"></div>
+                        <Content {...props} />
+                    </>
+                );
+            };
+
+            const Content = ( { pages, selectedPage } ) => {
+                return pages[selectedPage];
+            }
+
+            const element = null;
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            root.render( <App pages={pages} /> );
+        </script>
+    </body>
+</html>

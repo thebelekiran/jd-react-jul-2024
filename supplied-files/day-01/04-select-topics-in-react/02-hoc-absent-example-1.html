@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title></title>
+        <style></style>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.8/babel.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
+
+        <script type="text/babel">
+            const getWorkshops = async (_page = 1) => {
+                const response = await axios.get(
+                    `https://workshops-server.onrender.com/workshops`,
+                    {
+                        params: {
+                            _page,
+                        },
+                    }
+                );
+                return response.data;
+            };
+
+            class WorkshopsList extends React.Component {
+                state = {
+                    _page: 1,
+                    loading: true,
+                    workshops: [],
+                    filterKey: "",
+                    filteredItems: [],
+                };
+
+                next = () => {
+                    if (this.state.workshops.length === 0) {
+                        return;
+                    }
+
+                    this.setState({
+                        _page: this.state._page + 1,
+                    });
+                };
+
+                previous = () => {
+                    if (this.state._page === 1) {
+                        return;
+                    }
+
+                    this.setState({
+                        _page: this.state._page - 1,
+                    });
+                };
+
+                render() {
+                    console.log("render called");
+
+                    const { loading, _page } = this.state;
+                    const { list, filterKey, filteredItems } = this.state;
+
+                    return (
+                        <div className="container">
+                            {/* add page change functionality */}
+                            <button
+                                className="btn btn-small btn-primary me-2"
+                                onClick={this.previous}
+                            >
+                                Previous
+                            </button>
+                            <button
+                                className="btn btn-small btn-primary"
+                                onClick={this.next}
+                            >
+                                Next
+                            </button>
+                            <input
+                                type="search"
+                                value={filterKey}
+                                onChange={() => {
+                                    this.setState({
+                                        filterKey: event.target.value,
+                                    });
+                                }}
+                            />
+                            <div>You are on page {_page}</div>
+                            {loading && (
+                                <div className="d-flex justify-content-center">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            Loading...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                            {
+                                <div className="row">
+                                    {!loading &&
+                                        filteredItems.length !== 0 &&
+                                        filteredItems.map((workshop) => (
+                                            <div
+                                                key={workshop.id}
+                                                className="col-4 d-flex my-3"
+                                            >
+                                                <div class="card p-3 w-100">
+                                                    <img
+                                                        src={workshop.imageUrl}
+                                                        class="card-img-top"
+                                                        alt={workshop.name}
+                                                    />
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            {workshop.name}
+                                                        </h5>
+                                                        <div
+                                                            class="card-text"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: workshop.description,
+                                                            }}
+                                                        ></div>
+                                                        <a
+                                                            href="#"
+                                                            class="btn btn-primary"
+                                                        >
+                                                            Know more
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                </div>
+                            }
+                            {/* UI for error scenrio */}
+                        </div>
+                    );
+                }
+
+                async fetchWorkshops() {
+                    try {
+                        const workshops = await getWorkshops(this.state._page);
+                        this.setState({
+                            loading: false,
+                            workshops,
+                        });
+                    } catch (error) {
+                        // error.message has the error message
+                        // @todo
+                    }
+                }
+
+                // is called AFTER the first render
+                async componentDidMount() {
+                    console.log("componentDidMount called");
+                    this.fetchWorkshops();
+                }
+
+                // triggered after every state change, after the render
+                componentDidUpdate(oldProps, oldState) {
+                    // we need to be careful when making state changes so we don't end up with recursive state updates
+
+                    // pagination feature...
+                    if (oldState._page !== this.state._page) {
+                        this.fetchWorkshops();
+                    }
+
+                    // filtering feature code..
+                    const { workshops, filterKey } = this.state;
+
+                    if (
+                        workshops !== oldState.workshops ||
+                        filterKey !== oldState.filterKey
+                    ) {
+                        const filteredItems = workshops.filter((item) => {
+                            return item.name
+                                .toUpperCase()
+                                .includes(filterKey.toUpperCase());
+                        });
+                        this.setState({
+                            filteredItems,
+                        });
+                    }
+                }
+
+                componentWillUnmount() {
+                    console.log(
+                        "componentWillUnmount - do any cleanup tasks here"
+                    );
+                }
+            }
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<WorkshopsList x={100} />);
+        </script>
+    </body>
+</html>

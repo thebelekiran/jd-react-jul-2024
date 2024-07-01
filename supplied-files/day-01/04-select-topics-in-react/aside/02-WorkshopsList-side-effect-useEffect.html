@@ -1,0 +1,135 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Workshops List - Handling side effects</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
+
+        <script type="text/babel">
+            // service
+            const getWorkshops = async (page) => {
+                const response = await axios.get(
+                    `https://workshops-server.onrender.com/workshops`,
+                    {
+                        params: {
+                            _page: page,
+                        },
+                    }
+                );
+                return response.data;
+            };
+
+            const WorkshopsList = () => {
+                const [workshops, setWorkshops] = React.useState([]);
+                const [loading, setLoading] = React.useState(true);
+                const [error, setError] = React.useState(null);
+                
+                const [page, setPage] = React.useState(1);
+
+                // If dependencies array is [] (i.e. empty), the side-effect executes only AFTER the first render
+                // If dependencies array is not passed, the side-effect executes AFTER EVERY render
+                // If dependecies array is [ x, y, z ] then the side-effect runs when at least one of x / y / z changes
+                React.useEffect(
+                    // side effect function
+                    () => {
+                        const helper = async () => {
+                            try {
+                                const data = await getWorkshops(page);
+                                setWorkshops(data);
+                            } catch (error) {
+                                setError(error);
+                            } finally {
+                                setLoading(false);
+                            }
+                        };
+
+                        helper();
+
+                        // cleanup function can be returned
+                        // return () => {
+
+                        // }
+                    },
+                    [page] // dependencies array (props/state) - on what state/prop changes hould the side-effect runs
+                );
+
+                const previous = () => {
+                    if (page === 1) {
+                        return;
+                    }
+
+                    setPage((p) => p - 1);
+                };
+
+                const next = () => {
+                    setPage((p) => p + 1);
+                };
+
+                return (
+                    <div className="container my-4">
+                        <h1 className="h2">List of Workshops</h1>
+                        <hr />
+
+                        <div className="my-4">
+                            <div>You are viewing page {page}</div>
+                            <div className="mt-2">
+                                <button
+                                    className="btn btn-sm btn-primary me-2"
+                                    onClick={previous}
+                                >
+                                    Previous
+                                </button>
+                                <button
+                                    className="btn btn-sm btn-primary"
+                                    onClick={next}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+
+                        {loading && (
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                        {error !== null && (
+                            <div class="alert alert-danger" role="alert">
+                                {error.message}
+                            </div>
+                        )}
+                        {workshops.map((w) => (
+                            <div key={w.id}>{w.name}</div>
+                        ))}
+                    </div>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<WorkshopsList />);
+        </script>
+    </body>
+</html>

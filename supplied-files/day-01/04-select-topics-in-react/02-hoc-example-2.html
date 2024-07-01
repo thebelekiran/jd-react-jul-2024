@@ -1,0 +1,133 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
+
+        <script type="text/babel">
+            // service
+            const getWorkshops = async (page) => {
+                const response = await axios.get(
+                    `https://workshops-server.onrender.com/workshops`,
+                    {
+                        params: {
+                            _page: page,
+                        },
+                    }
+                );
+                return response.data;
+            };
+
+            // Higher Order Component (HOC)
+            const withFetch = (Component, fetcher) => {
+                // create and return a Wrapper component
+                return class extends React.Component {
+                    state = {
+                        data: [],
+                        loading: true,
+                        error: null,
+                    };
+
+                    async fetchData() {
+                        try {
+                            const data = await fetcher();
+                            // we can set multiple state in one go as well
+                            this.setState({
+                                data: data,
+                            });
+                        } catch (error) {
+                            this.setState({
+                                // error: error
+                                error,
+                            });
+                        } finally {
+                            this.setState({
+                                loading: false,
+                            });
+                        }
+                    }
+
+                    // componentDidMount executes after the first render only
+                    async componentDidMount() {
+                        this.fetchData();
+                    }
+
+                    render() {
+                        return (
+                            <Component
+                                data={this.state.data}
+                                loading={this.state.loading}
+                                error={this.state.error}
+                                {...this.state.props}
+                            />
+                        );
+                    }
+                };
+            };
+
+            class WorkshopsList extends React.Component {
+                render() {
+                    const { data: workshops, loading, error } = this.props;
+
+                    return (
+                        <div className="container my-4">
+                            <h1 className="h2">List of Workshops</h1>
+                            <hr />
+
+                            {loading && (
+                                <div className="d-flex justify-content-center">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            Loading...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                            {error !== null && (
+                                <div class="alert alert-danger" role="alert">
+                                    {error.message}
+                                </div>
+                            )}
+                            {workshops.map((w) => (
+                                <div key={w.id}>{w.name}</div>
+                            ))}
+                        </div>
+                    );
+                }
+
+                async componentWillUnmount() {
+                    console.log("Cleanup tasks");
+                }
+            }
+
+            const WorkshopsListWrapper = withFetch(WorkshopsList, getWorkshops);
+            // const SessionsListWraper = withFetch(SessionsList, getSessions);
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<WorkshopsListWrapper />);
+        </script>
+    </body>
+</html>

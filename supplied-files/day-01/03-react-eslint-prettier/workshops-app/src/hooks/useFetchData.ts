@@ -1,0 +1,39 @@
+import { useState, useEffect } from "react";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const useFetchData = <T>(fetch: () => Promise<T>, dependencies: any[] = []) => {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchHelper = async () => {
+    setLoading(true);
+
+    try {
+      const data = await fetch();
+      setData(data);
+    } catch (error) {
+      setError(error as Error);
+    }
+
+    setLoading(false);
+  };
+
+  // Feature 1: pagination (fetching workshops)
+  useEffect(
+    () => {
+      fetchHelper();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dependencies, // dependencies array
+  );
+
+  return {
+    data,
+    loading,
+    error,
+    fetchHelper,
+  };
+};
+
+export default useFetchData;

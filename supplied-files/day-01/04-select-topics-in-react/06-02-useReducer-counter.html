@@ -1,0 +1,94 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Render props</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script type="text/babel">
+            // action types
+            const DECREMENT = "DECREMENT";
+            const INCREMENT = "INCREMENT";
+
+            // all state changes will be managed in this function
+            // reducer should return what should be the new state
+            const counterReducer = (state, action) => {
+                switch (action.type) {
+                    case DECREMENT:
+                        return {
+                            ...state,
+                            value: state.value - action.payload.change,
+                        };
+                    case INCREMENT:
+                        return {
+                            ...state,
+                            value: state.value + action.payload.change,
+                        };
+                    default:
+                        return state; // no change in state
+                }
+            };
+
+            const Counter = () => {
+                // the state is an object, so we destructure the state object - { value }
+                const [{ value }, dispatch] = React.useReducer(counterReducer, {
+                    value: 0,
+                    // workshops: [],
+                    // error: null,
+                    // loading: true
+                });
+                const numberRef = React.useRef();
+
+                const decrement = () =>
+                    dispatch({
+                        // dispatch an "Action" (an object with a unique type)
+                        type: DECREMENT,
+                        payload: {
+                            change: +numberRef.current.value,
+                        },
+                    });
+                const increment = () =>
+                    dispatch({
+                        type: INCREMENT,
+                        payload: {
+                            change: +numberRef.current.value,
+                        },
+                    });
+
+                return (
+                    <span className="container border border-dark p-4 d-inline-block">
+                        <button onClick={decrement}>-</button>
+                        <span className="mx-3">{value}</span>
+                        <button onClick={increment}>+</button>
+                        <input
+                            type="number"
+                            defaultValue="1"
+                            className="ms-4"
+                            ref={numberRef}
+                        />
+                    </span>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<Counter />);
+        </script>
+    </body>
+</html>

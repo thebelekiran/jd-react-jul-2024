@@ -1,0 +1,72 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>memo, useCallback for Performance Optimization</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script type="text/babel">
+            // Defined this way, a child component (like Question is for QnA) renders whenever the parent renders
+            const Question = ({ title, toggle }) => {
+                console.log("Question::render");
+
+                return (
+                    <div onClick={toggle}>
+                        <strong>{title}</strong>
+                    </div>
+                );
+            };
+
+            const Answer = ({ children, open }) => {
+                console.log("Answer::render");
+
+                return open ? <div>{children}</div> : null;
+            };
+
+            const QnA = ({ title, children }) => {
+                console.log("QnA::render");
+
+                const [open, setOpen] = React.useState(false);
+
+                // toggle -> a "callback" prop (the function is passed as a prop to a child of QnA)
+                // the toggle function is just like any other local variable
+                // the toggle function gets recreated every time QnA function runs
+                // Thus toggle function changes from one render to the next inside QnA
+
+                const toggle = () => {
+                    setOpen((o) => !o);
+                };
+
+                return (
+                    <div>
+                        <Question title={title} toggle={toggle} />
+                        <Answer open={open}>{children}</Answer>
+                    </div>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(
+                <>
+                    <QnA title="What is React?">
+                        <p>It is a frontend library</p>
+                        <p>It is used to define views (UI)</p>
+                    </QnA>
+                </>
+            );
+        </script>
+    </body>
+</html>

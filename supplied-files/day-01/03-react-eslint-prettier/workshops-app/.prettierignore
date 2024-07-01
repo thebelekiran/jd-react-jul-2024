@@ -1,0 +1,7 @@
+# Ignore artifacts:
+eslint.config.mjs
+build
+coverage
+reports
+config
+public

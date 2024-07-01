@@ -1,0 +1,91 @@
+<!-- ! + Enter -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Workshops List - Handling side effects</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- React - architect (blueprint = React element) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+
+        <!-- ReactDOM - builder (converts React element -> DOM) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+
+        <!-- Compiler for JS + JSX -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"></script>
+
+        <script type="text/babel">
+            // service
+            const getWorkshops = async () => {
+                const response = await axios.get(
+                    `https://workshops-server.onrender.com/workshops`
+                );
+                return response.data;
+            };
+
+            const WorkshopsList = () => {
+                const [workshops, setWorkshops] = React.useState([]);
+                const [loading, setLoading] = React.useState(true);
+                const [error, setError] = React.useState(null);
+
+                // If dependencies array is [] (i.e. empty), the side-effect executes only AFTER the first render
+                // If dependencies array is not passed, the side-effect executes AFTER EVERY render
+                React.useEffect(
+                    // side effect function
+                    () => {
+                        const helper = async () => {
+                            try {
+                                const data = await getWorkshops();
+                                setWorkshops(data);
+                            } catch (error) {
+                                setError(error);
+                            } finally {
+                                setLoading(false);
+                            }
+                        };
+
+                        helper();
+                    },
+                    [] // dependencies array
+                );
+
+                return (
+                    <div className="container my-4">
+                        <h1 className="h2">List of Workshops</h1>
+                        <hr />
+                        {loading && (
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                        {error !== null && (
+                            <div class="alert alert-danger" role="alert">
+                                {error.message}
+                            </div>
+                        )}
+                        {workshops.map((w) => (
+                            <div key={w.id}>{w.name}</div>
+                        ))}
+                    </div>
+                );
+            };
+
+            const root = ReactDOM.createRoot(document.getElementById("root"));
+            root.render(<WorkshopsList />);
+        </script>
+    </body>
+</html>
