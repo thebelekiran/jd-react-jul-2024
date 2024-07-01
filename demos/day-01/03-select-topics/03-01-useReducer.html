@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.8/babel.js"></script>
+
+        <script type="text/babel">
+            function counterReducer( state, action ) {
+                switch(action.type) {
+                    case 'DECREMENT':
+                        return {
+                            value: state.value - 1
+                        };
+                    case 'INCREMENT':
+                        return {
+                            value: state.value + 1
+                        };
+                    default:
+                        return state; // no change in state
+                    
+                }
+            }
+
+            function Counter() {
+                const [ state, dispatch ] = React.useReducer(counterReducer, {
+                    value: 0
+                });
+                // const [ state2, dispatch2 ] = React.useReducer(counter2Reducer, {
+                //     value: 0
+                // });
+
+                const decrement = () => {
+                    dispatch({
+                        type: 'DECREMENT'
+                    })
+                    // setState(curState => {
+                    //     return {
+                    //         value: curState.value - 1
+                    //     };
+                    // })
+                }
+                
+                const increment = () => {
+                    dispatch({
+                        type: 'INCREMENT'
+                    })
+                    // setState(curState => {
+                    //     return {
+                    //         value: curState.value + 1
+                    //     };
+                    // })
+                }
+
+                return (
+                    <>
+                        <button onClick={decrement}>-</button>
+                        <span>{state.value}</span>
+                        <button onClick={increment}>+</button>
+                    </>
+                )
+            }
+
+            const root = ReactDOM.createRoot( document.getElementById( 'root' ) );
+            root.render( <Counter /> );
+        </script>
+    </body>
+</html>
