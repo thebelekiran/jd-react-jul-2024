@@ -20,15 +20,17 @@
 
         <script type="text/babel">
             // Defined this way, a child component (like Question is for QnA) renders whenever the parent renders
-            const Question = ({ title, toggle }) => {
-                console.log("Question::render");
+            const Question = React.memo(
+                ({ title, toggle }) => {
+                    console.log("Question::render");
 
-                return (
-                    <div onClick={toggle}>
-                        <strong>{title}</strong>
-                    </div>
-                );
-            };
+                    return (
+                        <div onClick={toggle}>
+                            <strong>{title}</strong>
+                        </div>
+                    );
+                }
+            );
 
             const Answer = ({ children, open }) => {
                 console.log("Answer::render");
@@ -46,9 +48,12 @@
                 // the toggle function gets recreated every time QnA function runs
                 // Thus toggle function changes from one render to the next inside QnA
 
-                const toggle = () => {
-                    setOpen((o) => !o);
-                };
+                const toggle = React.useCallback(
+                    () => {
+                        setOpen((o) => !o);
+                    },
+                    [setOpen]
+                );
 
                 return (
                     <div>

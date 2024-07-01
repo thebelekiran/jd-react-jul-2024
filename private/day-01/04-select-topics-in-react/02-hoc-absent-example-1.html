@@ -33,13 +33,66 @@
                 return response.data;
             };
 
+            // create the HOC
+            function withFilter( Component ) {
+                return class Wrapper extends React.Component {
+                    state = {
+                        filterKey: "",
+                        filteredItems: [],
+                        list: []
+                    };
+
+                    setList( list ) {
+                        console.log('setList::list', list);
+                        this.setState({
+                            list: list
+                        });
+                    }
+                    
+                    setFilterKey( filterKey ) {
+                        this.setState({
+                            filterKey: filterKey
+                        });
+                    }
+
+                    componentDidUpdate(oldProps, oldState) {
+                        console.log('withFilter::componentDidUpdate');
+
+                        // filtering feature code..
+                        const { list, filterKey } = this.state;
+
+                        if (
+                            list !== oldState.list ||
+                            filterKey !== oldState.filterKey
+                        ) {
+                            const filteredItems = list.filter((item) => {
+                                return item.name
+                                    .toUpperCase()
+                                    .includes(filterKey.toUpperCase());
+                            });
+                            console.log( 'filteredItems = ', filteredItems )
+                            this.setState({
+                                filteredItems,
+                            });
+                        }
+                    }
+
+                    render() {
+                        return <Component
+                            filterKey={this.state.filterKey}
+                            filteredItems={this.state.filteredItems}
+                            setList={this.setList}
+                            setFilterKey={this.setFilterKey}
+                        />
+                    }
+                }
+            }
+
             class WorkshopsList extends React.Component {
                 state = {
                     _page: 1,
                     loading: true,
                     workshops: [],
-                    filterKey: "",
-                    filteredItems: [],
                 };
 
                 next = () => {
@@ -65,8 +118,8 @@
                 render() {
                     console.log("render called");
 
-                    const { loading, _page } = this.state;
-                    const { list, filterKey, filteredItems } = this.state;
+                    const { loading, _page, list } = this.state;
+                    const { filterKey, filteredItems, setList, setFilterKey } = this.props;
 
                     return (
                         <div className="container">
@@ -87,9 +140,7 @@
                                 type="search"
                                 value={filterKey}
                                 onChange={() => {
-                                    this.setState({
-                                        filterKey: event.target.value,
-                                    });
+                                    setFilterKey( event.target.value );
                                 }}
                             />
                             <div>You are on page {_page}</div>
@@ -148,12 +199,15 @@
                 }
 
                 async fetchWorkshops() {
+                    const { setList } = this.props;
+
                     try {
                         const workshops = await getWorkshops(this.state._page);
                         this.setState({
                             loading: false,
                             workshops,
                         });
+                        setList( workshops );
                     } catch (error) {
                         // error.message has the error message
                         // @todo
@@ -174,23 +228,6 @@
                     if (oldState._page !== this.state._page) {
                         this.fetchWorkshops();
                     }
-
-                    // filtering feature code..
-                    const { workshops, filterKey } = this.state;
-
-                    if (
-                        workshops !== oldState.workshops ||
-                        filterKey !== oldState.filterKey
-                    ) {
-                        const filteredItems = workshops.filter((item) => {
-                            return item.name
-                                .toUpperCase()
-                                .includes(filterKey.toUpperCase());
-                        });
-                        this.setState({
-                            filteredItems,
-                        });
-                    }
                 }
 
                 componentWillUnmount() {
@@ -200,8 +237,10 @@
                 }
             }
 
+            const WLWrapper = withFilter( WorkshopsList );
+
             const root = ReactDOM.createRoot(document.getElementById("root"));
-            root.render(<WorkshopsList x={100} />);
+            root.render(<WLWrapper x={100} />);
         </script>
     </body>
 </html>

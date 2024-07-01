@@ -297,7 +297,10 @@ npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 npm i --save-dev husky lint-staged
 ```
-
+- Make yoour project a Git-based prpject
+```
+git init
+```
 -   Add the `prepare` script in `package.json` and follow with an `npm prepare`
 
 ```json
@@ -309,7 +312,7 @@ npm i --save-dev husky lint-staged
 ```
 
 ```
-npm prepare
+npm run prepare
 ```
 
 -   This creates the `.husky` folder. We shall add the pre-commit hook soon here.
