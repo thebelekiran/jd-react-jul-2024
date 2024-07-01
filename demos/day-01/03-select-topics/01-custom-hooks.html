@@ -21,13 +21,23 @@
                     'bananas'
                 ]);
                 const [filteredFruits, setFilteredFruits] = React.useState(fruits);
+                const [filterKey, setFilterKey] = React.useState('');
+
+                React.useEffect(
+                    () => {
+                        const filteredFruits = fruits.filter( item => item.includes( filterKey ) );
+                        setFilteredFruits( filteredFruits );
+                    },
+                    [filterKey]
+                )
 
                 return (
                     <>
                         <input
                             type="search"
+                            value={filterKey}
                             onChange={event => {
-
+                                setFilterKey( event.target.value );
                             }}
                         />
                         <ul>
