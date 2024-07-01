@@ -14,22 +14,30 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.8/babel.js"></script>
 
         <script type="text/babel">
-            function ProductsList () {
-                const [fruits, setFruits] = React.useState([
-                    'apples',
-                    'oranges',
-                    'bananas'
-                ]);
-                const [filteredFruits, setFilteredFruits] = React.useState(fruits);
+            const useFilter = (initialData) => {
+                const [data, setData] = React.useState(initialData);
+                const [filteredData, setFilteredData] = React.useState(initialData);
                 const [filterKey, setFilterKey] = React.useState('');
 
                 React.useEffect(
                     () => {
-                        const filteredFruits = fruits.filter( item => item.includes( filterKey ) );
-                        setFilteredFruits( filteredFruits );
+                        const filteredData = data.filter( item => item.includes( filterKey ) );
+                        setFilteredData( filteredData );
                     },
                     [filterKey]
-                )
+                );
+
+                return {
+                    filterKey,
+                    filteredData,
+                    setFilteredData,
+                    setData,
+                    setFilterKey
+                };
+            }
+
+            function ProductsList () {
+                const { filterKey, filteredData : filteredFruits, setFilterKey } = useFilter([ 'apples', 'oranges', 'bananas' ]);
 
                 return (
                     <>
@@ -38,6 +46,7 @@
                             value={filterKey}
                             onChange={event => {
                                 setFilterKey( event.target.value );
+                                console.log( filterKey )
                             }}
                         />
                         <ul>
@@ -49,6 +58,10 @@
                         </ul>
                     </>
                 )
+            }
+
+            function CustomDropDown() {
+
             }
 
             ReactDOM
