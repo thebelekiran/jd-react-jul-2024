@@ -1,6 +1,6 @@
-const WorkshopDetails = () => {
+const WorkshopDetails = ({ id }) => {
     return (
-        <div>Show the details</div>
+        <div>Show the details for workshop with id = {id}</div>
     );
 }
 
