@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getWorkshops } from '../../services/workshops';
+import { getWorkshops } from '../../../services/workshops';
 import { Link } from 'react-router-dom';
 
 const WorkshopsList = () => {

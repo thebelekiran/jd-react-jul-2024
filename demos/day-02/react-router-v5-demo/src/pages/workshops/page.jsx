@@ -1,4 +1,4 @@
-import WorkshopsList from "../../components/WorkshopsList/WorkshopsList";
+import WorkshopsList from "../../components/workshops/WorkshopsList/WorkshopsList";
 
 const WorkshopsListPage = () => {
     return <WorkshopsList />
