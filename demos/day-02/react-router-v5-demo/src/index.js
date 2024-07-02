@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-// just run the file to configure axios
+// just run the file to configure axios at the very beginning of application startup
 import './services/configureAxios';
 
 import './index.css';
