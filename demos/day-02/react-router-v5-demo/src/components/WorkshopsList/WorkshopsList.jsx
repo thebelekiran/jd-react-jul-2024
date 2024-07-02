@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getWorkshops } from '../../services/workshops';
+import { Link } from 'react-router-dom';
 
 const WorkshopsList = () => {
     const [workshops, setWorkshops] = useState([]);
@@ -25,7 +26,9 @@ const WorkshopsList = () => {
             {
                 workshops && workshops.map(
                     w => (
-                        <div key={w.id}>{w.name}</div>
+                        <Link to={"/workshops/" + w.id}>
+                            <div key={w.id}>{w.name}</div>
+                        </Link>
                     )
                 )
             }
