@@ -18,19 +18,31 @@ const Products = () => {
 
     return (
         <>
-            {
-                products.map(
-                    p => (
-                        <Fragment key={p.name}>
-                            <div>{p.name}</div>
-                            <buttton>Add to cart</buttton>
-                        </Fragment>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                {
+                    products.map(
+                        p => (
+                            <Fragment key={p.name}>
+                                <ListItem>
+                                    <ListItemText primary={p.name} secondary={
+                                        <>
+                                            {p.address.city}
+                                        </>
+                                    }></ListItemText>
+                                </ListItem>
+
+                                <div>{p.name}</div>
+
+                            </Fragment>
+                        )
                     )
-                )
-            }
+                }
+            </List>
         </>
     );
 }
+
+
 
 export default Products;
 
