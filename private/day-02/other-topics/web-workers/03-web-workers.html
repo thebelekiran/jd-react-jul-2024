@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Web workers</title>
+    </head>
+    <body>
+        <button onclick="alert( 'button was clicked' );">Button</button>
+        <script>
+            var worker = new Worker( '03-worker.js' );
+            worker.postMessage({
+                a: 1,
+                b: 2
+            });
+            worker.onmessage = function( event ) {
+                console.log( event.data.result );
+            };
+
+            // function sum() {
+            //     var result = 0;
+            //     for( var i = 0; i < 10000000000; i++ ) {
+            //         for( var j = 0; j < 10000000000; j++ ) {
+            //             result += i;
+            //         }
+            //     }
+            // }
+
+            // setTimeout(function() {
+            //     sum();
+            // }, 1000);
+        </script>
+    </body>
+</html>
