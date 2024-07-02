@@ -16,6 +16,7 @@ import "./WorkshopsList.css";
 export const loader = (async ({ request }) => {
     const url = new URL(request.url);
     const pageParams = url.searchParams.get("page");
+    
     let page = 1;
 
     if (pageParams) {

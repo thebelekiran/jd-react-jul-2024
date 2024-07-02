@@ -42,12 +42,39 @@ function ErrorBoundary() {
     );
 }
 
+function ErrorBoundaryWL() {
+    const error = useRouteError();
+    console.error(error);
+    return (
+        <div
+            style={{
+                display: "grid",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            Something went wrong when fetching list of workshops
+        </div>
+    );
+}
+
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
         errorElement: <ErrorBoundary />,
         children: [
+            {
+                index: true,
+                element: <Home />,
+            },
+            {
+                path: "/workshops",
+                element: <WorkshopsList />,
+                loader: worshopsListLoader,
+                // errorElement: <ErrorBoundary />,
+                errorElement: <ErrorBoundaryWL />
+            },
             {
                 path: "/workshops/add",
                 element: <AddWorkshop />,
@@ -71,16 +98,6 @@ const router = createBrowserRouter([
                         errorElement: <ErrorBoundary />,
                     },
                 ],
-            },
-            {
-                path: "/workshops",
-                element: <WorkshopsList />,
-                loader: worshopsListLoader,
-                errorElement: <ErrorBoundary />,
-            },
-            {
-                index: true,
-                element: <Home />,
             },
             {
                 path: "*",

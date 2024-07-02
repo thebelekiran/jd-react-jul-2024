@@ -1,14 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-
-// just run the file to configure axios at the very beginning of application startup
-import './services/configureAxios';
-
-import { createBrowserRouter } from 'react-router-dom';
-
 import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
