@@ -1,7 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { Link, Switch, Route } from 'react-router-dom';
 
 import SessionsList from './SessionsList/SessionsList';
-import RequestSession from './RequestSession/RequestSession';
+// import RequestSession from './RequestSession/RequestSession';
+const RequestSession = lazy(() => import('./RequestSession/RequestSession'));
 
 const WorkshopDetails = ({ id }) => {
     return (
@@ -19,10 +21,12 @@ const WorkshopDetails = ({ id }) => {
             </div>
 
             <div className="my-5">
-                <Switch>
-                    <Route path={`/workshops/:id/add`} component={RequestSession} />
-                    <Route path={`/workshops/:id`} component={SessionsList} />
-                </Switch>
+                <Suspense fallback={<div>Loading this section...Please wait...</div>}>
+                    <Switch>
+                        <Route path={`/workshops/:id/add`} component={RequestSession} />
+                        <Route path={`/workshops/:id`} component={SessionsList} />
+                    </Switch>
+                </Suspense>
             </div>
         </>
     );
