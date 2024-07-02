@@ -1,8 +1,12 @@
 import { Fragment, useState, useEffect } from 'react';
+import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { getWorkshops } from "../services/workshops";
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../slices/cartSlice';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(
         () => {
@@ -26,18 +30,29 @@ const Products = () => {
                                 <ListItem>
                                     <ListItemText primary={p.name} secondary={
                                         <>
-                                            {p.address.city}
+                                            {p.location.city}
+                                            <Button
+                                                variant="outlined"
+                                                onClick={() => {
+                                                    dispatch(
+                                                        addToCart(
+                                                            {
+                                                                item: p
+                                                            }
+                                                        )
+                                                    );
+                                                }}
+                                            >
+                                                Add to cart
+                                            </Button>
                                         </>
                                     }></ListItemText>
                                 </ListItem>
-
-                                <div>{p.name}</div>
-
                             </Fragment>
                         )
                     )
                 }
-            </List>
+            </List >
         </>
     );
 }
