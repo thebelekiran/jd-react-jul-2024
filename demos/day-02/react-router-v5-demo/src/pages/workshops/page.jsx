@@ -1,5 +1,7 @@
+import WorkshopsList from "../../components/WorkshopsList/WorkshopsList";
+
 const WorkshopsListPage = () => {
-    return <div>Workshops list page</div>
+    return <WorkshopsList />
 };
 
 export default WorkshopsListPage;

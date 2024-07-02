@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+// just run the file to configure axios
+import './services/configureAxios';
+
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
