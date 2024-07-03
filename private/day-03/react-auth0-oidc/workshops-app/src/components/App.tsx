@@ -2,6 +2,7 @@
 // import React from 'react';
 import { Route, Switch } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { ProtectedRoute } from "./global/ProtectedRoute/ProtectedRoute";
 import Menu from "./global/Menu/Menu";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
@@ -26,12 +27,15 @@ function App() {
                     <Route path="/login" exact>
                         <Login />
                     </Route>
-                    <Route path="/workshops" exact>
-                        <WorkshopsList />
-                    </Route>
-                    <Route path="/workshops/:id">
-                        <WorkshopDetails />
-                    </Route>
+                    <ProtectedRoute
+                        component={WorkshopsList}
+                        path="/workshops"
+                        exact
+                    />
+                    <ProtectedRoute
+                        component={WorkshopDetails}
+                        path="/workshops/:id"
+                    />
                     <Route path="**">
                         <PageNotFound />
                     </Route>

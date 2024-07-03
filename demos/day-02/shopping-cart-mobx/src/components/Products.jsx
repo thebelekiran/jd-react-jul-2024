@@ -1,6 +1,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Button, List, ListItem, ListItemText } from '@mui/material';
 import { getWorkshops } from "../services/workshops";
+import shoppingCart from '../stores/ShoppingCart';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -31,7 +32,7 @@ const Products = () => {
                                             <Button
                                                 variant="outlined"
                                                 onClick={() => {
-
+                                                    shoppingCart.addToCart(p);
                                                 }}
                                             >
                                                 Add to cart

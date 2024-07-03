@@ -5,6 +5,7 @@ import SessionsList from "./SessionsList/SessionsList";
 import AddSession from "./AddSession/AddSession";
 import { getWorkshopById } from "../../../services/workshops";
 import IWorkshop from "../../../models/IWorkshop";
+import { useAuth0 } from "@auth0/auth0-react";
 
 type Params = {
     id: string;
@@ -17,13 +18,16 @@ const WorkshopDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
+    const { getAccessTokenSilently } = useAuth0();
+
     useEffect(
         () => {
             const helper = async () => {
                 setLoading(true);
 
                 try {
-                    const workshop = await getWorkshopById(id);
+                    const token = await getAccessTokenSilently();
+                    const workshop = await getWorkshopById(id, token);
                     setWorkshop(workshop as any);
                 } catch (error) {
                     setError(error as Error);

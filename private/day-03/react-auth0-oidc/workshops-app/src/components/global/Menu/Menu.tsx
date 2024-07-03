@@ -51,7 +51,13 @@ const Menu = () => {
                             <Nav.Link
                                 as={NavLink}
                                 to="#"
-                                onClick={() => loginWithRedirect()}
+                                onClick={async () =>
+                                    await loginWithRedirect({
+                                        appState: {
+                                            returnTo: "/workshops",
+                                        },
+                                    })
+                                }
                             >
                                 Login
                             </Nav.Link>

@@ -1,5 +1,8 @@
+import { observer } from 'mobx-react';
+import shoppingCart from '../stores/ShoppingCart';
+
 const ShoppingCart = () => {
-    const items = [];
+    const items = shoppingCart.items;
 
     return (
         <>
@@ -15,4 +18,4 @@ const ShoppingCart = () => {
     );
 }
 
-export default ShoppingCart;
+export default observer(ShoppingCart);

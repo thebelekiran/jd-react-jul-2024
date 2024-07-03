@@ -3,7 +3,7 @@ const {
     REACT_APP_API_BASE_URL
 } = process.env;
 
-console.log( REACT_APP_API_BASE_URL );
+console.log(REACT_APP_API_BASE_URL);
 
 axios.defaults.baseURL = REACT_APP_API_BASE_URL;
 axios.defaults.headers = {
@@ -11,4 +11,6 @@ axios.defaults.headers = {
 };
 
 // to setup request and response interception
-// axios.interceptors
+axios.interceptors.request.use((config) => {
+    config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+})
