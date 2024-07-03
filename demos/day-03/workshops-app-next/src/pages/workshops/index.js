@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+
 // You can choose either SSR or SSG to be used in any page-level component (any component in pages/ folder)
 
-// Service-Side Rendering (SSR)
+// Server-Side Rendering (SSR)
 export async function getServerSideProps() {
     const response = await axios.get(`https://workshops-server.onrender.com/workshops`);
     const workshops = response.data;
@@ -45,7 +47,13 @@ export default function WorkshopsListPage({ workshops }) {
             <div>
                 {
                     workshops.map(
-                        w => <div key={w.id}>{w.name}</div>
+                        w => (
+                            <div key={w.id}>
+                                <Link href={"/workshops/" + w.id}>
+                                    {w.name}
+                                </Link>
+                            </div>
+                        )
                     )
                 }
             </div>
