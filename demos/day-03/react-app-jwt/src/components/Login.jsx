@@ -1,11 +1,27 @@
 import { useRef } from 'react';
+import axios from 'axios';
 
 const Login = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
 
+    const onSubmit = (event) => {
+        event.preventDefault();
+
+        const credentials = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value
+        };
+
+        axios.post(`http://localhost:8001/login`, credentials, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    };
+
     return (
-        <form>
+        <form onSubmit={onSubmit}>
             <input
                 type="text"
                 placeholder="email"
