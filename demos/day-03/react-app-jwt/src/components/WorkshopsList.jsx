@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { isAuthenticated } from '../auth';
+import { useNavigate } from 'react-router-dom';
 
 const WorkshopsList = () => {
     const [workshops, setWorkshops] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(
         () => {
@@ -12,12 +15,17 @@ const WorkshopsList = () => {
                 setWorkshops(data);
             };
 
-            helper();
+            if (isAuthenticated()) {
+                helper();
+            } else {
+                navigate("/login");
+            }
         },
         []
-    )
+    );
 
     return (
+
         <div>
             {
                 workshops.map(
