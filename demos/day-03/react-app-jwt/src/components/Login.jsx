@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import configureAxios from '../configureAxios';
 
 const Login = () => {
     const emailRef = useRef();
@@ -25,6 +26,8 @@ const Login = () => {
 
         localStorage.setItem('token', data.authToken);
         localStorage.setItem('email', data.email);
+
+        configureAxios();
 
         navigate("/workshops");
     };
