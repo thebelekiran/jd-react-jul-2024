@@ -1,6 +1,29 @@
 import axios from 'axios';
 
-export async function getServerSideProps(args) {
+export async function getStaticPaths() {
+    const response = await axios.get(`https://workshops-server.onrender.com/workshops`);
+    const workshops = response.data;
+
+    const workshopIds = workshops.map(
+        w => (
+            {
+                params: {
+                    id: "" + w.id // ALL params should be strings
+                },
+            }
+        )
+    );
+
+    console.log(workshopIds);
+
+    return {
+        paths: workshopIds,
+        fallback: false // no other workshops except these -> if we get a request for some other workshop, return 404
+    }
+}
+
+export async function getStaticProps(args) {
+    console.log('getStaticProps');
     console.log(args); // args.params.id is the requested workshop's id
 
     const id = args.params.id
@@ -12,7 +35,8 @@ export async function getServerSideProps(args) {
     return {
         props: {
             sessions: sessions
-        }
+        },
+        revalidate: 300
     }
 }
 

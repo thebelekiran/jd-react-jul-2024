@@ -14,51 +14,54 @@ server.use(middlewares);
 server.use(jsonServer.bodyParser);
 
 function isAuthorized(req, res) {
-    if (req.path === '/login') return true;
+  if (req.path === '/login') return true;
 
-    if (!req.headers.authorization) {
-        return false;
-    }
+  if (!req.headers.authorization) {
+    return false;
+  }
 
-    let token = req.headers.authorization.split(' ')[1];
-    
-    let payload;
-    try {
-        payload = jwt.decode(token, 'shhh...');
-    } catch (err) {
-        return false;
-    }
+  let token = req.headers.authorization.split(' ')[1];
 
-    if (!payload || !payload.sub) {
-        return false;
-    }
+  let payload;
+  try {
+    payload = jwt.decode(token, 'shhh...');
+  } catch (err) {
+    return false;
+  }
 
-    res.locals.payload = payload;
+  if (!payload || !payload.sub) {
+    return false;
+  }
 
-    return true
+  res.locals.payload = payload;
+
+  return true
 }
 
 // login endpoint
 server.post('/login', function (req, res) {
-    let body = req.body;
-    let email = body.email;
-    let password = body.password;
+  let body = req.body;
+  let email = body.email;
+  let password = body.password;
 
-    if( email === 'john.doe@example.com' && password === 'password' ) {
-      let payload = {
-        iss: req.hostname,
-        sub: '' + email
-      };
+  console.log('email = ', email);
+  console.log('password = ', password);
 
-      let token = jwt.encode(payload, 'shhh...');
+  if (email === 'john.doe@example.com' && password === 'password') {
+    let payload = {
+      iss: req.hostname,
+      sub: '' + email
+    };
 
-      res.json({
-          email: email,
-          authToken: token
-      });
-    } else {
-      res.sendStatus(401);
-    }
+    let token = jwt.encode(payload, 'shhh...');
+
+    res.json({
+      email: email,
+      authToken: token
+    });
+  } else {
+    res.sendStatus(401);
+  }
 });
 
 // Check for authorization
@@ -82,5 +85,5 @@ server.use((req, res, next) => {
 
 server.use(router);
 server.listen(port, () => {
-  console.log( `JSON Server is running on port ${port}` );
+  console.log(`JSON Server is running on port ${port}`);
 });
